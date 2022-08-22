@@ -36,6 +36,18 @@ class ReceiveSharingIntentModule implements IReceiveSharingIntent {
         this.isClear = true;
     }
 
+    getReceivedFilesOnce(handler: Function, errorHandler: Function, protocol: string = "ShareMedia"){
+        if(this.isIos){
+            Linking.getInitialURL().then((res:any) => {
+                if (res && res.startsWith(`${protocol}://dataUrl`)) {
+                    this.getFileNames(handler, errorHandler, res);
+                }
+            }).catch(() => { });
+        }else{
+           this.getFileNames(handler,errorHandler, "");
+        }
+    }
+
     
    protected getFileNames(handler: Function, errorHandler: Function, url: string){
         if(this.isIos){
